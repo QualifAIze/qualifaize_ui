@@ -53,11 +53,3 @@ Requirements
    python-jose[cryptography]
 
 - As an external service you need `qualifaize_backend_api` which by default runs on port `8080`
-
-License
--------
-
-MIT (or specify your license)
-
-
-QualifAIze streamlines and automates the interview process, making hiring more efficient and consistent with the power of AI.
