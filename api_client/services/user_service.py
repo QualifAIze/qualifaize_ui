@@ -24,8 +24,6 @@ class UserService(BaseApiClient):
             birth_date: str,
             roles: Optional[List[str]] = None
     ) -> ApiResponse:
-        if roles is None:
-            roles = ["USER"]
 
         registration_data = {
             "username": username,

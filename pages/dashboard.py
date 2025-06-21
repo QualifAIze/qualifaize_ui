@@ -6,6 +6,10 @@ st.set_page_config(page_title="QualifAIze", layout="wide", page_icon="<UNK>")
 
 st.markdown(not_logged_dashboard_style, unsafe_allow_html=True)
 
+if st.session_state.authenticated_user:
+    logged_user = st.session_state.authenticated_user
+    st.header("Welcome, " + logged_user["username"] + "!")
+
 st.title("Welcome to QualifAIze - An AI Automated Interview System")
 st.markdown("""
 > #### **Automated AI Interviews: Just Upload One Document**
@@ -14,9 +18,14 @@ st.markdown("""
 > Upload a candidate’s resume or profile, and our AI creates a tailored interview, scores responses, and delivers detailed insights—automatically.
 """)
 
-st.info("You are not logged in. Please login or register to unlock the full capabilities of automated AI interviews.")
 
-st.header("Why Choose Our AI Interview Platform?")
+if st.session_state.authenticated_user:
+    st.info("You are logged in now! If you need more permissions feel free to contact us.")
+    st.header("Thank you for choosing our AI Interview Platform!")
+else:
+    st.info("You are not logged in. Please login or register to unlock the full capabilities of automated AI interviews.")
+    st.header("Why Choose our AI Interview Platform?")
+
 
 # Features content
 features = [

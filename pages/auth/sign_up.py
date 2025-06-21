@@ -2,6 +2,7 @@ import datetime
 
 import streamlit as st
 from custom_styles import auth_styles
+from api_client.services.user_service import UserService
 
 def show_sign_up_page():
     st.markdown(auth_styles, unsafe_allow_html=True)
@@ -18,3 +19,9 @@ def show_sign_up_page():
     if back:
         st.session_state["registration_view"] = "sign_in"
         st.rerun()
+
+    if sign_up:
+        user_service = UserService()
+        birthdate_as_string = "{:04d}-{:02d}-{:02d}T00:00:00Z".format(birthdate.year, birthdate.month, birthdate.day)
+        response = user_service.register(username, firstname, lastname, email, birthdate_as_string, password)
+        a = 3
