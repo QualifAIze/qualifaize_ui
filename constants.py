@@ -1,7 +1,12 @@
 import base64
 
 BACKEND_BASE_URL = "http://localhost:8080"
-BACKEND_BASE_PATH = "api/v1"
+BACKEND_BASE_PATH = "api_client/v1"
+DEFAULT_TIMEOUT = 30
+DEFAULT_CONTENT_TYPE = "application/json"
+BEARER_PREFIX = "Bearer"
+HTTP_SUCCESS_MIN = 200
+HTTP_SUCCESS_MAX = 300
 
 DIFFICULTY = ["EASY", "MEDIUM", "HARD"]
 
