@@ -3,6 +3,7 @@ import logging
 from dataclasses import dataclass
 from typing import Dict, Any, Optional
 from urllib.parse import urljoin
+import streamlit as st
 
 import requests
 
@@ -97,6 +98,10 @@ class BaseApiClient:
             headers: Optional[Dict[str, str]] = None
     ) -> ApiResponse:
         url = self._build_url(endpoint)
+
+        if st.session_state.authenticated_user is not None:
+            logged_user = st.session_state.authenticated_user
+            headers = logged_user["auth_headers"]
 
         kwargs = {
             'timeout': self.timeout,

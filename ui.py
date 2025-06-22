@@ -19,16 +19,17 @@ def get_available_authenticated_guest_role_pages():
         "Home": [dashboard]
     }
 
+
 def get_available_authenticated_user_role_pages():
     available_pages = get_available_authenticated_guest_role_pages()
-    available_pages["Home"].extend([bugs, alerts])
+    available_pages["Home"].extend([interview, interview_history])
     return available_pages
 
 
 def get_available_authenticated_admin_role_pages():
     available_pages = get_available_authenticated_user_role_pages()
     available_pages.update({
-        "Tools": [search, history]
+        "Management": [document_management, user_management]
     })
     return available_pages
 
@@ -38,20 +39,21 @@ def logout():
     st.rerun()
 
 
-sign_in_page = st.Page("pages/auth/authentication.py", title="Sign In", icon=":material/login:")
-sign_up_page = st.Page("pages/auth/sign_up.py", title="Sign Up", icon=":material/person_add:")
+sign_in_page = st.Page("pages/auth/authentication_page.py", title="Sign In", icon=":material/login:")
 logout_page = st.Page(logout, title="Sign Out", icon=":material/logout:")
 
-account_details = st.Page("pages/account_details.py", title="Account Details", icon=":material/account_circle:")
+account_details = st.Page("pages/account_details_page.py", title="Account Details", icon=":material/account_circle:")
 
-dashboard = st.Page("pages/dashboard.py", title="Home Screen",
+dashboard = st.Page("pages/dashboard_page.py", title="Home Screen",
                     icon=":material/home:", default=True)
 
-bugs = st.Page("reports/bugs.py", title="Bug reports", icon=":material/bug_report:")
-alerts = st.Page("reports/alerts.py", title="System alerts", icon=":material/notification_important:")
+interview = st.Page("pages/interview_page.py", title="Interview", icon=":material/adaptive_audio_mic:")
+interview_history = st.Page("pages/interview_history_page.py", title="History", icon=":material/history:")
 
-search = st.Page("tools/search.py", title="Search", icon=":material/search:")
-history = st.Page("tools/history.py", title="History", icon=":material/history:")
+document_management = st.Page("pages/management/pdf_management_page.py", title="Document Management",
+                              icon=":material/folder_managed:")
+user_management = st.Page("pages/management/user_management_page.py", title="User Management",
+                          icon=":material/manage_accounts:")
 
 if st.session_state.authenticated_user is not None:
     logged_user = st.session_state.authenticated_user
