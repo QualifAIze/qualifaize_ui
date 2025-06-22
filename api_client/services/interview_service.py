@@ -38,6 +38,10 @@ class InterviewService(BaseApiClient):
     def get_next_question(self, interview_id: str) -> ApiResponse:
         return self.get(f"{self.base_endpoint}/next/{interview_id}")
 
+    def get_available_interviews(self, status: str = None) -> ApiResponse:
+        request_param = "assigned" if status is None else f"assigned?status={status}"
+        return self.get(f"{self.base_endpoint}/{request_param}")
+
     def submit_answer(self, question_id: str, answer: str) -> ApiResponse:
         params = {"correctAnswer": answer.upper()}
         return self.get(f"{self.base_endpoint}/answer/{question_id}", params=params)

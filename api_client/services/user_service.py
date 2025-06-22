@@ -7,6 +7,9 @@ class UserService(BaseApiClient):
         super().__init__(auth_token=auth_token, **kwargs)
         self.base_endpoint = "user"
 
+    def get_all_users(self) -> ApiResponse:
+        return self.get(f"{self.base_endpoint}")
+
     def login(self, username: str, password: str) -> ApiResponse:
         login_data = {
             "username": username,
