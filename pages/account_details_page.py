@@ -1,219 +1,230 @@
-from datetime import datetime
+from datetime import datetime, date
 
 import streamlit as st
 
-from pages.auth.sign_in import decode_jwt
+from api_client.services.user_service import UserService
+from custom_styles import account_details_styles
+from dialogs.update_user_details_dialog import update_user_dialog
+
+user_service = UserService()
 
 
-def format_role_badge(role: str) -> str:
-    """Format role as a colored badge"""
-    color_map = {
-        "ADMIN": "#FF4B4B",
-        "USER": "#1F77B4",
-        "GUEST": "#28A745"
-    }
-    color = color_map.get(role, "#6C757D")
-    return f'<span style="background-color: {color}; color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px;">{role}</span>'
+def get_account_type(roles):
+    """Determine account type based on roles"""
+    if not roles:
+        return "Guest"
+
+    if "ADMIN" in roles:
+        return "Administrator"
+    elif "USER" in roles:
+        return "Standard User"
+    elif "GUEST" in roles:
+        return "Guest"
+    else:
+        return "Guest"
 
 
-# Custom CSS for account details page
-st.markdown("""
-<style>
-.account-header {
-    background: linear-gradient(135deg, #FF4B4B, #FF6B6B);
-    color: white;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    text-align: center;
-}
-.account-header h1 {
-    margin: 0;
-    font-size: 2rem;
-}
-.account-header p {
-    margin: 5px 0 0 0;
-    opacity: 0.9;
-}
-.metric-card {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    border-left: 4px solid #FF4B4B;
-    margin: 10px 0;
-}
-.security-status {
-    background: #e8f5e8;
-    border: 1px solid #28a745;
-    border-radius: 8px;
-    padding: 10px;
-    margin: 5px 0;
-}
-</style>
-""", unsafe_allow_html=True)
+def get_user_details():
+    """Fetch current user details from the API"""
+    try:
+        response = user_service.get_current_user_details()
+        if response.is_success:
+            return response.data
+        else:
+            st.error(f"Failed to fetch user details: {response.error}")
+            return None
+    except Exception as e:
+        st.error(f"Error fetching user details: {str(e)}")
+        return None
 
-# Check if user is authenticated
-if not st.session_state.authenticated_user:
+
+@st.dialog("Update User Details", width="large")
+def show_update_user_dialog(current_user_data):
+    update_user_dialog(current_user_data, user_service)
+
+
+# Custom CSS for enhanced styling with theme support
+st.markdown(account_details_styles, unsafe_allow_html=True)
+
+# Check authentication
+if not st.session_state.get('authenticated_user'):
     st.error("❌ You must be logged in to view account details")
     st.info("Please sign in to access your account information")
     st.stop()
 
-# Get user data from session
-logged_user = st.session_state.authenticated_user
-user_data = decode_jwt(logged_user.get("token", ""))
+# Page header
+st.title("👤 Account Details")
+st.markdown("*Manage your personal information and account settings*")
 
-# Header section
-username = logged_user.get("username", "Unknown User")
-roles = logged_user.get("roles", [])
+# Fetch user details
+with st.spinner("Loading your account details..."):
+    user_data = get_user_details()
 
-st.markdown(f"""
-<div class="account-header">
-    <h1>👤 Account Details</h1>
-    <p>Welcome back, <strong>{username}</strong>!</p>
-</div>
-""", unsafe_allow_html=True)
+if not user_data:
+    st.error("Could not load account details. Please try again later.")
+    st.stop()
 
-# User overview section
-st.subheader("📋 Account Overview")
+st.markdown(
+    f"### 🎯 Welcome, **{user_data.get('username', 'User')}!** <span class='account-type-badge'>{get_account_type(st.session_state.authenticated_user['roles'])}</span>",
+    unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns(3)
+st.divider()
 
-with col1:
-    st.markdown(f"""
-    <div class="metric-card">
-        <h3>Username</h3>
-        <p style="font-size: 1.2rem; font-weight: bold; color: #FF4B4B;">{username}</p>
-    </div>
-    """, unsafe_allow_html=True)
+info_cols = st.columns(2)
 
-with col2:
-    roles_html = "".join([format_role_badge(role) for role in roles])
-    st.markdown(f"""
-    <div class="metric-card">
-        <h3>Roles</h3>
-        <p>{roles_html}</p>
-    </div>
-    """, unsafe_allow_html=True)
+with info_cols[0]:
+    st.markdown("**👤 Identity**")
 
-with col3:
-    account_type = "Administrator" if "ADMIN" in roles else "Standard User" if "USER" in roles else "Guest"
-    st.markdown(f"""
-    <div class="metric-card">
-        <h3>Account Type</h3>
-        <p style="font-size: 1.2rem; font-weight: bold; color: #28A745;">{account_type}</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-# Create tabs for different sections
-tab1, tab2, tab3, tab4 = st.tabs(["🔐 Security", "👥 Permissions", "⚙️ Actions", "ℹ️ System"])
-
-with tab1:
-    st.subheader("🔐 Security & Session Information")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.write("**Session Details:**")
-        st.write(f"• **Token Issued:** {user_data.get('issued_at', 'Unknown').strftime('%Y-%m-%d %H:%M:%S')}")
-        st.write(f"• **Token Expires:** {user_data.get('expires_at', 'Unknown').strftime('%Y-%m-%d %H:%M:%S')}")
-
-        # Calculate time remaining
-        expires_at = user_data.get('expires_at')
-        if expires_at:
-            time_remaining = expires_at - datetime.now()
-            if time_remaining.total_seconds() > 0:
-                hours_remaining = int(time_remaining.total_seconds() // 3600)
-                minutes_remaining = int((time_remaining.total_seconds() % 3600) // 60)
-                st.write(f"• **Time Remaining:** {hours_remaining}h {minutes_remaining}m")
-            else:
-                st.error("⚠️ Token has expired!")
-
-    with col2:
-        st.markdown("""
-        <div class="security-status">
-            <h4>Security Status</h4>
-            <p>✅ Session Active</p>
-            <p>✅ JWT Token Valid</p>
-            <p>✅ Secure Connection</p>
+    st.markdown(f'''
+        <div class="info-field">
+            <div class="info-label">Username</div>
+            <div class="info-value">{user_data.get('username', 'Not provided')}</div>
         </div>
-        """, unsafe_allow_html=True)
+        ''', unsafe_allow_html=True)
 
-        if st.button("🔄 Refresh Session", help="Extend your session"):
-            st.info("Session refresh would be implemented here")
+    # First Name field
+    st.markdown(f'''
+        <div class="info-field">
+            <div class="info-label">First Name</div>
+            <div class="info-value">{user_data.get('firstName', 'Not provided')}</div>
+        </div>
+        ''', unsafe_allow_html=True)
 
-with tab2:
-    st.subheader("👥 Permissions & Access Levels")
+    # Last Name field
+    st.markdown(f'''
+        <div class="info-field">
+            <div class="info-label">Last Name</div>
+            <div class="info-value">{user_data.get('lastName', 'Not provided')}</div>
+        </div>
+        ''', unsafe_allow_html=True)
 
-    # Define permissions for each role
-    role_permissions = {
-        "ADMIN": [
-            "Full system administration",
-            "User management",
-            "Document management",
-            "Interview creation and management",
-            "System configuration",
-            "View all analytics and reports"
-        ],
-        "USER": [
-            "Create and participate in interviews",
-            "Upload and manage personal documents",
-            "View interview history",
-            "Access personal analytics"
-        ],
-        "GUEST": [
-            "Limited system access",
-            "View public content",
-            "Basic profile management"
-        ]
-    }
+with info_cols[1]:
+    st.markdown("**📧 Contact & Personal**")
 
-    for role in roles:
-        with st.expander(f"{format_role_badge(role)} {role} Permissions", expanded=True):
-            permissions = role_permissions.get(role, ["No specific permissions defined"])
-            for permission in permissions:
-                st.write(f"✓ {permission}")
+    # Email field
+    st.markdown(f'''
+        <div class="info-field">
+            <div class="info-label">Email Address</div>
+            <div class="info-value">{user_data.get('email', 'Not provided')}</div>
+        </div>
+        ''', unsafe_allow_html=True)
 
-with tab3:
-    st.subheader("⚙️ Account Actions")
+    # Format birth date
+    birth_date_str = "Not provided"
+    if user_data.get('birthDate'):
+        try:
+            birth_date_iso = user_data['birthDate']
+            if birth_date_iso.endswith('Z'):
+                birth_date_iso = birth_date_iso[:-1] + '+00:00'
+            birth_date = datetime.fromisoformat(birth_date_iso)
+            birth_date_str = birth_date.strftime('%B %d, %Y')
+        except (ValueError, TypeError):
+            birth_date_str = "Invalid date format"
 
-    col1, col2, col3 = st.columns(3)
+    # Birth Date field
+    st.markdown(f'''
+        <div class="info-field">
+            <div class="info-label">Birth Date</div>
+            <div class="info-value">{birth_date_str}</div>
+        </div>
+        ''', unsafe_allow_html=True)
 
-    with col1:
-        if st.button("🔑 Change Password", use_container_width=True):
-            st.info("Password change functionality would be implemented here")
+    if user_data.get('birthDate') and birth_date_str != "Not provided":
+        try:
+            birth_date_iso = user_data['birthDate']
+            if birth_date_iso.endswith('Z'):
+                birth_date_iso = birth_date_iso[:-1] + '+00:00'
+            birth_date = datetime.fromisoformat(birth_date_iso).date()
+            age = (date.today() - birth_date).days // 365
 
-    with col2:
-        if st.button("📧 Update Email", use_container_width=True):
-            st.info("Email update functionality would be implemented here")
+            st.markdown(f'''
+                <div class="info-field">
+                    <div class="info-label">Age</div>
+                    <div class="info-value">{age} years old</div>
+                </div>
+                ''', unsafe_allow_html=True)
+        except (ValueError, TypeError):
+            pass
+if st.button("✏️ Update Details", type="primary", use_container_width=True):
+    show_update_user_dialog(user_data)
 
-    with col3:
-        if st.button("🗑️ Delete Account", use_container_width=True, type="secondary"):
-            st.warning("Account deletion would require confirmation")
+st.divider()
 
-with tab4:
-    st.subheader("ℹ️ System Information")
+st.markdown("### 🔐 Account Status")
 
-    col1, col2 = st.columns(2)
+status_cols = st.columns(3)
 
-    with col1:
-        st.write("**Application Details:**")
-        st.write("• **Platform:** QualifAIze Interview System")
-        st.write("• **Version:** 1.0.0")
-        st.write("• **Backend:** Spring Boot + PostgreSQL")
-        st.write("• **Frontend:** Streamlit")
+with status_cols[0]:
+    member_since_str = "Unknown"
+    if user_data.get('memberSince'):
+        try:
+            member_since_iso = user_data['memberSince']
+            if member_since_iso.endswith('Z'):
+                member_since_iso = member_since_iso[:-1] + '+00:00'
+            member_since = datetime.fromisoformat(member_since_iso)
+            member_since_str = member_since.strftime('%B %d, %Y')
+        except (ValueError, TypeError):
+            member_since_str = "Invalid date"
 
-    with col2:
-        st.write("**Technical Stack:**")
-        st.write("• **Authentication:** JWT")
-        st.write("• **API:** RESTful")
-        st.write("• **AI Integration:** OpenAI & Mistral")
-        st.write("• **Security:** Role-based Access Control")
+    st.markdown(f'''
+        <div class="info-field">
+            <div class="info-label">📅 Member Since</div>
+            <div class="info-value">{member_since_str}</div>
+        </div>
+        ''', unsafe_allow_html=True)
 
-# Footer with helpful information
-st.markdown("---")
-st.markdown("""
-<div style="text-align: center; color: #666; font-size: 0.9rem;">
-    <p>🛡️ Your account is secured with JWT authentication and role-based access control.</p>
-    <p>For support, contact: <a href="mailto:support@qualifaize.com">support@qualifaize.com</a></p>
-</div>
-""", unsafe_allow_html=True)
+with status_cols[1]:
+    # User ID field
+    st.markdown(f'''
+        <div class="info-field">
+            <div class="info-label">🆔 User ID</div>
+            <div class="info-value">{user_data.get('userId', 'N/A')}</div>
+        </div>
+        ''', unsafe_allow_html=True)
+
+with status_cols[2]:
+    # Account Status field
+    st.markdown(f'''
+        <div class="info-field">
+            <div class="info-label">✅ Account Status</div>
+            <div class="info-value"><span class="status-badge">Active</span></div>
+        </div>
+        ''', unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
+
+# Quick Actions Section
+st.markdown("### ⚡ Quick Actions")
+
+action_cols = st.columns(4)
+
+with action_cols[0]:
+    if st.button("🔑 Change Password", use_container_width=True, type="secondary"):
+        st.info("🚧 Password change functionality will be implemented in a future update")
+
+with action_cols[1]:
+    if st.button("🖼️ Update Avatar", use_container_width=True, type="secondary"):
+        st.info("🚧 Avatar upload functionality will be implemented in a future update")
+
+with action_cols[2]:
+    if st.button("🔔 Notifications", use_container_width=True, type="secondary"):
+        st.info("🚧 Notification settings will be implemented in a future update")
+
+with action_cols[3]:
+    if st.button("📊 Activity Log", use_container_width=True, type="secondary"):
+        st.info("🚧 Activity log will be implemented in a future update")
+
+# Help Section
+with st.expander("❓ Need Help?"):
+    st.markdown("""
+    **Common Questions:**
+
+    - **How to update my information?** Click the "Update Details" button and modify the fields you want to change.
+    - **How to change my password?** This feature is coming soon. Contact support for now.
+    - **Can I change my username?** Yes, but make sure it's unique across the system.
+    - **How to delete my account?** Contact our support team for account deletion requests.
+
+    **Support Contact:**
+    - 📧 Email: support@qualifaize.com
+    - 🌐 Documentation: [Help Center](#)
+    """)

@@ -1,4 +1,4 @@
-not_logged_dashboard_style = """<style>
+dashboard_styles = """<style>
 .feature-card {
     /* Enhanced glassmorphism background with gradient */
     background: linear-gradient(
@@ -215,6 +215,71 @@ auth_styles = """
     letter-spacing: -0.02em;
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     transition: color 0.3s;
+}
+</style>
+"""
+
+account_details_styles = """
+<style>
+:root {
+    --account-bg: rgba(31, 41, 55, 0.8);
+    --account-border: #374151;
+    --section-border: #60a5fa;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --info-bg: rgba(55, 65, 81, 0.8);
+    --status-bg: #dcfce7;
+    --status-text: #166534;
+    --status-border: #bbf7d0;
+}
+
+
+.info-field {
+    background: var(--info-bg);
+    border: 1px solid var(--account-border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 8px 0;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.info-value {
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 500;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+
+.account-type-badge {
+    background: var(--status-bg);
+    color: var(--status-text);
+    padding: 6px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid var(--status-border);
+    display: inline-block;
+}
+
+.status-badge {
+    background: var(--status-bg);
+    color: var(--status-text);
+    padding: 6px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid var(--status-border);
 }
 </style>
 """

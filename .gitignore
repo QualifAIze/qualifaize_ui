@@ -2,6 +2,12 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
 
 # Virtual environments (conda and others)
 venv/
@@ -19,9 +25,6 @@ conda/
 
 # Conda packages (cache)
 pkgs/
-*.egg-info/
-*.egg
-
 # PyCharm project files
 .idea/
 *.iml

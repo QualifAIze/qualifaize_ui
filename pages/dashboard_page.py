@@ -1,10 +1,10 @@
 import streamlit as st
 
-from custom_styles import not_logged_dashboard_style
+from custom_styles import dashboard_styles
 
 st.set_page_config(page_title="QualifAIze", layout="wide", page_icon="<UNK>")
 
-st.markdown(not_logged_dashboard_style, unsafe_allow_html=True)
+st.markdown(dashboard_styles, unsafe_allow_html=True)
 
 if st.session_state.authenticated_user:
     logged_user = st.session_state.authenticated_user

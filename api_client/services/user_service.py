@@ -10,6 +10,33 @@ class UserService(BaseApiClient):
     def get_all_users(self) -> ApiResponse:
         return self.get(f"{self.base_endpoint}")
 
+    def get_current_user_details(self) -> ApiResponse:
+        return self.get(f"{self.base_endpoint}/me")
+
+    def update_user_details(
+            self,
+            user_id: str,
+            username: Optional[str] = None,
+            email: Optional[str] = None,
+            first_name: Optional[str] = None,
+            last_name: Optional[str] = None,
+            birth_date: Optional[str] = None
+    ) -> ApiResponse:
+        update_data = {}
+
+        if username is not None:
+            update_data["username"] = username
+        if email is not None:
+            update_data["email"] = email
+        if first_name is not None:
+            update_data["firstName"] = first_name
+        if last_name is not None:
+            update_data["lastName"] = last_name
+        if birth_date is not None:
+            update_data["birthDate"] = birth_date
+
+        return self.put(f"{self.base_endpoint}/{user_id}", data=update_data)
+
     def login(self, username: str, password: str) -> ApiResponse:
         login_data = {
             "username": username,
@@ -27,6 +54,8 @@ class UserService(BaseApiClient):
             birth_date: str,
             roles: Optional[List[str]] = None
     ) -> ApiResponse:
+        if roles is None:
+            roles = ["GUEST"]
 
         registration_data = {
             "username": username,

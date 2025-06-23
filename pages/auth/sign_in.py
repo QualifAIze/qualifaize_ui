@@ -9,11 +9,13 @@ from custom_styles import auth_styles
 def decode_jwt(token):
     payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     username = payload.get("sub")
+    user_id = payload.get("userId")
     roles = payload.get("roles")
 
     user_object = {
         "token": token,
         "username": username,
+        "user_id": user_id,
         "roles": roles,
         "auth_headers": {
             "Authorization": f"Bearer {token}",

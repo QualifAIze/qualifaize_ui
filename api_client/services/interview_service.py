@@ -31,16 +31,19 @@ class InterviewService(BaseApiClient):
 
         return self.post(self.base_endpoint, data=interview_data)
 
-    def update_interview_status(self, interview_id: str, new_status: str) -> ApiResponse:
+    def change_interview_status(self, interview_id: str, new_status: str) -> ApiResponse:
         params = {"newStatus": new_status}
         return self.get(f"{self.base_endpoint}/{interview_id}", params=params)
 
     def get_next_question(self, interview_id: str) -> ApiResponse:
         return self.get(f"{self.base_endpoint}/next/{interview_id}")
 
-    def get_available_interviews(self, status: str = None) -> ApiResponse:
-        request_param = "assigned" if status is None else f"assigned?status={status}"
-        return self.get(f"{self.base_endpoint}/{request_param}")
+    def get_assigned_interviews(self, status: Optional[str] = None) -> ApiResponse:
+        if status:
+            params = {"status": status}
+            return self.get(f"{self.base_endpoint}/assigned", params=params)
+        else:
+            return self.get(f"{self.base_endpoint}/assigned")
 
     def submit_answer(self, question_id: str, answer: str) -> ApiResponse:
         params = {"correctAnswer": answer.upper()}

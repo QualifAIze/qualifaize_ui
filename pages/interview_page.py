@@ -27,7 +27,7 @@ if is_admin:
 # =============================================================================
 # ASSIGNED INTERVIEWS CONTAINER (Existing Code)
 # =============================================================================
-current_logged_user_assigned_interviews = interview_service.get_available_interviews(status="SCHEDULED")
+current_logged_user_assigned_interviews = interview_service.get_assigned_interviews(status="SCHEDULED")
 
 if current_logged_user_assigned_interviews.data and len(current_logged_user_assigned_interviews.data) > 0:
     interview_container = st.container(border=True)
@@ -66,7 +66,7 @@ if current_logged_user_assigned_interviews.data and len(current_logged_user_assi
                          key=f"start_{interview_id}",
                          type="primary",
                          use_container_width=True):
-                response = interview_service.update_interview_status(interview_id, "IN_PROGRESS")
+                response = interview_service.change_interview_status(interview_id, "IN_PROGRESS")
                 if response.is_success:
                     st.success("Interview started successfully!")
                     st.rerun()
