@@ -47,7 +47,7 @@ account_details = st.Page("pages/account_details_page.py", title="Account Detail
 dashboard = st.Page("pages/dashboard_page.py", title="Home Screen",
                     icon=":material/home:", default=True)
 
-interview = st.Page("pages/interview_page.py", title="Interview", icon=":material/adaptive_audio_mic:")
+interview = st.Page("pages/interview/interview_page.py", title="Interview", icon=":material/adaptive_audio_mic:")
 interview_history = st.Page("pages/interview_history_page.py", title="History", icon=":material/history:")
 
 document_management = st.Page("pages/management/document_management_page.py", title="Document Management",

@@ -230,3 +230,73 @@ def assign_interview_dialog():
         - **MEDIUM**: Moderate complexity with practical scenarios  
         - **HARD**: Advanced questions requiring deep understanding
         """)
+
+def completion_dialog(total_questions, correct_answers, accuracy):
+    """Show completion dialog with results"""
+
+    st.markdown(f"""
+        <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 48px; margin-bottom: 20px;">🎉</div>
+            <h2 style="color: #10b981; margin-bottom: 16px;">Congratulations!</h2>
+            <p style="font-size: 18px; margin-bottom: 20px;">
+                You have successfully completed the interview.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("### 📊 Your Performance")
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric("Total Questions", total_questions)
+    with col2:
+        st.metric("Correct Answers", correct_answers)
+    with col3:
+        st.metric("Final Score", f"{accuracy:.1f}%")
+
+    st.divider()
+
+    performance_msg, performance_color = get_performance_feedback(accuracy)
+
+    st.markdown(f"""
+        <div style="
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid {performance_color};
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            color: {performance_color};
+        ">
+            {performance_msg}
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.divider()
+
+    render_next_steps()
+
+    if st.button("✅ Close", type="primary", use_container_width=True):
+        st.rerun()
+
+
+def get_performance_feedback(accuracy):
+    """Get performance feedback message and color based on accuracy"""
+    if accuracy >= 80:
+        return "🌟 **Excellent Performance!** You demonstrated strong knowledge in this area.", "#10b981"
+    elif accuracy >= 60:
+        return "👍 **Good Performance!** You showed solid understanding with room for improvement.", "#f59e0b"
+    else:
+        return "📚 **Learning Opportunity!** Consider reviewing the topics covered in this interview.", "#ef4444"
+
+
+def render_next_steps():
+    """Render next steps information"""
+    st.markdown("### 📋 Next Steps")
+    st.info("""
+        **Your interview has been completed and submitted successfully.**
+
+        Please wait for feedback from the person who created this interview. 
+        You will be notified once the review is complete.
+
+        Thank you for your time and effort!
+        """)

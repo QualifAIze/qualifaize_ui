@@ -204,6 +204,7 @@ dashboard_styles = """<style>
 </style>
 """
 
+
 auth_styles = """
 <style>
 .login-title {
@@ -218,6 +219,7 @@ auth_styles = """
 }
 </style>
 """
+
 
 account_details_styles = """
 <style>
@@ -283,6 +285,7 @@ account_details_styles = """
 }
 </style>
 """
+
 
 user_management_styles = """
 <style>
@@ -362,6 +365,7 @@ user_management_styles = """
 }
 </style>
 """
+
 
 document_management_styles = """
 <style>
@@ -448,3 +452,160 @@ document_management_styles = """
 }
 </style>
 """
+
+
+interview_page_styles = """
+    <style>
+    .interview-container {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 69, 19, 0.05) 100%);
+        border-radius: 12px;
+        padding: 24px;
+        margin: 16px 0;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    [data-theme="dark"] .interview-container {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 69, 19, 0.1) 100%);
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .question-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 16px 0;
+        border-left: 4px solid #3b82f6;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] .question-card {
+        background: rgba(55, 65, 81, 0.95);
+        border-left-color: #60a5fa;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        color: #f9fafb;
+    }
+
+    .question-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .feedback-correct {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 8px;
+        padding: 16px;
+        margin: 12px 0;
+        color: #065f46;
+    }
+
+    [data-theme="dark"] .feedback-correct {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(34, 197, 94, 0.1) 100%);
+        color: #a7f3d0;
+    }
+
+    .feedback-incorrect {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 8px;
+        padding: 16px;
+        margin: 12px 0;
+        color: #991b1b;
+    }
+
+    [data-theme="dark"] .feedback-incorrect {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.1) 100%);
+        color: #fca5a5;
+    }
+
+    .interview-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .question-counter {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 8px;
+        padding: 8px 16px;
+        display: inline-block;
+        font-weight: 500;
+        color: #1e40af;
+        margin-bottom: 16px;
+    }
+
+    [data-theme="dark"] .question-counter {
+        background: rgba(59, 130, 246, 0.2);
+        color: #93c5fd;
+    }
+
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: center;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .question-history-sidebar {
+        background: rgba(248, 250, 252, 0.8);
+        border-radius: 8px;
+        padding: 16px;
+        margin-top: 20px;
+        border: 1px solid rgba(203, 213, 225, 0.5);
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    [data-theme="dark"] .question-history-sidebar {
+        background: rgba(30, 41, 59, 0.8);
+        border-color: rgba(71, 85, 105, 0.5);
+    }
+
+    .history-question-item {
+        padding: 8px 12px;
+        margin: 4px 0;
+        border-radius: 6px;
+        border-left: 3px solid;
+        font-size: 14px;
+    }
+
+    .history-correct {
+        border-left-color: #10b981;
+        background: rgba(16, 185, 129, 0.1);
+    }
+
+    .history-incorrect {
+        border-left-color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+    }
+
+    @media (max-width: 768px) {
+        .interview-container {
+            padding: 16px;
+            margin: 8px 0;
+        }
+        
+        .question-card {
+            padding: 16px;
+            margin: 12px 0;
+        }
+        
+        .interview-header {
+            padding: 16px;
+        }
+        
+        .question-history-sidebar {
+            margin-top: 16px;
+            max-height: 60vh;
+        }
+    }
+    </style>
+    """

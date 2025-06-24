@@ -46,13 +46,10 @@ def upload_document_dialog(document_service):
             st.rerun()
 
     with col2:
-        upload_disabled = not (uploaded_file and document_title and document_title.strip())
-
         if st.button(
                 "🚀 Upload Document",
                 type="primary",
-                use_container_width=True,
-                disabled=upload_disabled
+                use_container_width=True
         ):
             if not uploaded_file:
                 st.error("❌ Please select a PDF file")
