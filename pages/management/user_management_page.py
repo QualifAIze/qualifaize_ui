@@ -1,67 +1,11 @@
-from datetime import datetime
-
 import streamlit as st
 
 from api_client.services.user_service import UserService
 from custom_styles import user_management_styles
 from dialogs.user_management_dialogs import add_new_user_dialog, edit_user_dialog
+from utils import truncate_text, format_date, get_role_display, get_role_color
 
 user_service = UserService()
-
-def format_date(date_string):
-    """Format ISO date string to readable format"""
-    try:
-        if date_string:
-            if date_string.endswith('Z'):
-                date_string = date_string[:-1] + '+00:00'
-            dt = datetime.fromisoformat(date_string)
-            return dt.strftime("%b %d, %Y")
-    except (ValueError, TypeError):
-        pass
-    return "Unknown"
-
-
-def truncate_text(text, max_length=20):
-    """Truncate text to specified length with ellipsis"""
-    if not text:
-        return "N/A"
-    return text if len(text) <= max_length else text[:max_length - 3] + "..."
-
-
-def get_role_display(roles):
-    """Convert roles list to display string"""
-    if not roles:
-        return "Guest"
-
-    # Show all roles, prioritizing highest
-    role_priority = {"ADMIN": 3, "USER": 2, "GUEST": 1}
-    sorted_roles = sorted(roles, key=lambda x: role_priority.get(x, 0), reverse=True)
-
-    if len(sorted_roles) == 1:
-        role = sorted_roles[0]
-        if role == "ADMIN":
-            return "Administrator"
-        elif role == "USER":
-            return "User"
-        else:
-            return "Guest"
-    else:
-        # Multiple roles - show highest priority
-        return get_role_display([sorted_roles[0]])
-
-
-def get_role_color(roles):
-    """Get color for role badge"""
-    if not roles:
-        return "#6b7280"
-
-    if "ADMIN" in roles:
-        return "#dc2626"  # Red for admin
-    elif "USER" in roles:
-        return "#059669"  # Green for user
-    else:
-        return "#6b7280"  # Gray for guest
-
 
 @st.dialog("✏️ Edit User Details", width="large")
 def show_edit_user_dialog(user_id_to_update, user_data_before_update):
@@ -117,7 +61,6 @@ if "ADMIN" not in user_roles:
     st.info("Contact your system administrator for access")
     st.stop()
 
-# Header with Add New User button (removed search functionality)
 if st.button("👤 Add New User", type="primary", use_container_width=True):
     show_add_user_dialog()
 
@@ -160,7 +103,7 @@ with st.spinner("Loading users..."):
                                 full_name = username
 
                             display_name = full_name if full_name != username else username
-                            st.markdown(f"""#### {truncate_text(display_name, 25)}""")
+                            st.markdown(f"""#### 👨🏻‍💼 {truncate_text(display_name, 25)}""")
 
                             if display_name != username:
                                 st.markdown(f"""

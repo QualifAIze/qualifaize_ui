@@ -50,7 +50,7 @@ dashboard = st.Page("pages/dashboard_page.py", title="Home Screen",
 interview = st.Page("pages/interview_page.py", title="Interview", icon=":material/adaptive_audio_mic:")
 interview_history = st.Page("pages/interview_history_page.py", title="History", icon=":material/history:")
 
-document_management = st.Page("pages/management/pdf_management_page.py", title="Document Management",
+document_management = st.Page("pages/management/document_management_page.py", title="Document Management",
                               icon=":material/folder_managed:")
 user_management = st.Page("pages/management/user_management_page.py", title="User Management",
                           icon=":material/manage_accounts:")

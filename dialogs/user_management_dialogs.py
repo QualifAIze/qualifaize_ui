@@ -9,7 +9,6 @@ def add_new_user_dialog(user_service):
 
     st.markdown("*Create a new user account in the system*")
 
-    # User basic information
     st.markdown("#### 👤 Basic Information")
     col1, col2 = st.columns(2)
 
@@ -37,7 +36,6 @@ def add_new_user_dialog(user_service):
             placeholder="Enter last name"
         )
 
-    # Password and birth date
     st.markdown("#### 🔐 Account Details")
     col1, col2 = st.columns(2)
 
@@ -58,17 +56,16 @@ def add_new_user_dialog(user_service):
             help="Select date of birth"
         )
 
-    # Role selection
     st.markdown("#### 🏷️ User Roles")
     roles = st.multiselect(
         "Assign Roles",
         options=["GUEST", "USER", "ADMIN"],
-        default=["GUEST"],
+        default=["GUEST", "USER"],
         help="Select one or more roles for the user"
     )
 
-    # Action buttons
-    st.markdown("---")
+
+    st.divider()
     col1, col2 = st.columns([1, 1])
 
     with col1:
@@ -92,7 +89,6 @@ def add_new_user_dialog(user_service):
             if not all([username, email, first_name, last_name, password, birth_date]):
                 st.error("❌ Please fill in all required fields")
             else:
-                # Create user
                 with st.spinner("Creating user account..."):
                     try:
                         birth_date_str = birth_date.strftime('%Y-%m-%dT00:00:00Z')
@@ -155,7 +151,6 @@ def edit_user_dialog(user_id, current_user_data, user_service):
             placeholder="Enter last name"
         )
 
-    # Birth date and role management
     col1, col2 = st.columns(2)
 
     with col1:
@@ -187,11 +182,9 @@ def edit_user_dialog(user_id, current_user_data, user_service):
         current_user_session = st.session_state.get('authenticated_user', {})
         current_user_id = current_user_session.get('user_id')
 
-        # Determine highest current role
         role_hierarchy = {"GUEST": 0, "USER": 1, "ADMIN": 2}
         highest_role = max(current_roles, key=lambda x: role_hierarchy.get(x, 0))
 
-        # Role promotion options
         role_options = ["GUEST", "USER", "ADMIN"]
         current_role_index = role_options.index(highest_role) if highest_role in role_options else 0
 
@@ -229,8 +222,7 @@ def edit_user_dialog(user_id, current_user_data, user_service):
             roles_str = ", ".join(current_roles)
             st.markdown(f"**Current roles:** {roles_str}")
 
-    # Action buttons
-    st.markdown("---")
+    st.divider()
     col1, col2, col3 = st.columns(3)
 
     with col1:
@@ -238,7 +230,6 @@ def edit_user_dialog(user_id, current_user_data, user_service):
             st.rerun()
 
     with col2:
-        # Update details button
         if st.button(
                 "💾 Update Details",
                 type="secondary",
@@ -270,7 +261,6 @@ def edit_user_dialog(user_id, current_user_data, user_service):
                     st.error(f"❌ Error updating user: {str(e)}")
 
     with col3:
-        # Promote/change role button
         role_changed = new_role != highest_role
         promote_disabled = not role_changed or (is_self and highest_role == "ADMIN")
 
@@ -281,7 +271,6 @@ def edit_user_dialog(user_id, current_user_data, user_service):
                 disabled=promote_disabled,
                 help="Change user role" if not promote_disabled else "Cannot change role"
         ):
-            # Promote/change user role
             with st.spinner(f"Changing role to {new_role}..."):
                 try:
                     response = user_service.promote_user(user_id, new_role)
