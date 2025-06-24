@@ -4,29 +4,22 @@ from datetime import datetime
 import constants
 from dialogs.assign_interview_dialog import assign_interview_dialog
 
-# Initialize services
 interview_service = InterviewService()
 
-# Check if user has admin role for interview assignment
 current_user = st.session_state.get('authenticated_user', {})
 user_roles = current_user.get('roles', [])
 is_admin = constants.ROLE_ADMIN in user_roles
 
-# =============================================================================
-# ASSIGN INTERVIEW DIALOG (Admin Only)
-# =============================================================================
+
 @st.dialog("Assign New Interview", width="large")
 def show_assign_dialog():
     assign_interview_dialog()
 
+
 if is_admin:
-    # Create Interview Assignment Button
     if st.button("🎯 Assign New Interview", type="primary", icon="🚀", use_container_width=True):
         show_assign_dialog()
 
-# =============================================================================
-# ASSIGNED INTERVIEWS CONTAINER (Existing Code)
-# =============================================================================
 current_logged_user_assigned_interviews = interview_service.get_assigned_interviews(status="SCHEDULED")
 
 if current_logged_user_assigned_interviews.data and len(current_logged_user_assigned_interviews.data) > 0:
@@ -76,7 +69,6 @@ if current_logged_user_assigned_interviews.data and len(current_logged_user_assi
             if len(current_logged_user_assigned_interviews.data) > 1:
                 st.divider()
 else:
-    # Show message when no interviews are assigned
     if not is_admin:
         st.info("📋 No interviews currently assigned to you.")
     else:
