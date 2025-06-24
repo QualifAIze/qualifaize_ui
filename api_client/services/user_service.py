@@ -37,6 +37,10 @@ class UserService(BaseApiClient):
 
         return self.put(f"{self.base_endpoint}/{user_id}", data=update_data)
 
+    def promote_user(self, user_id: str, role: str) -> ApiResponse:
+        params = {"role": role}
+        return self.get(f"{self.base_endpoint}/promote/{user_id}", params=params)
+
     def login(self, username: str, password: str) -> ApiResponse:
         login_data = {
             "username": username,
