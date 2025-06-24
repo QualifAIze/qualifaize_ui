@@ -40,8 +40,8 @@ class BaseApiClient:
         self.session = requests.Session()
         self.logger = logging.getLogger(self.__class__.__name__)
 
+        # Set default headers for JSON requests only
         self.session.headers.update({
-            'Content-Type': 'application/json',
             'Accept': 'application/json'
         })
 
@@ -99,29 +99,53 @@ class BaseApiClient:
     ) -> ApiResponse:
         url = self._build_url(endpoint)
 
+        # Start with clean headers for this request
+        request_headers = {}
+
+        # Get auth headers from session state
         if st.session_state.authenticated_user is not None:
             logged_user = st.session_state.authenticated_user
-            headers = logged_user["auth_headers"]
+            auth_token = logged_user.get("token")
+            if auth_token:
+                request_headers["Authorization"] = f"Bearer {auth_token}"
+
+        # Add any additional headers passed to the method
+        if headers:
+            request_headers.update(headers)
 
         kwargs = {
             'timeout': self.timeout,
             'params': params,
-            'headers': headers
         }
 
         if files:
+            # For multipart/form-data requests (file uploads)
             kwargs['files'] = files
             if data:
+                # Add form data alongside files
                 kwargs['data'] = data
-            temp_headers = self.session.headers.copy()
-            temp_headers.pop('Content-Type', None)
-            kwargs['headers'] = {**(headers or {}), **temp_headers}
+
+            # CRITICAL: Only add Accept header for file uploads, let requests handle Content-Type
+            request_headers = {k: v for k, v in request_headers.items() if k != 'Content-Type'}
+            request_headers['Accept'] = 'application/json'
+            kwargs['headers'] = request_headers
+
         else:
+            # For regular JSON requests
+            request_headers['Content-Type'] = 'application/json'
+            request_headers['Accept'] = 'application/json'
+            kwargs['headers'] = request_headers
+
             if data is not None:
                 kwargs['json'] = data
 
         try:
             self.logger.debug(f"Making {method} request to {url}")
+            self.logger.debug(f"Headers: {kwargs.get('headers', {})}")
+            if files:
+                self.logger.debug(f"Files: {list(files.keys()) if files else None}")
+                self.logger.debug(f"Form data: {data}")
+
             response = self.session.request(method, url, **kwargs)
 
             api_response = self._handle_response(response)

@@ -21,13 +21,21 @@ class DocumentService(BaseApiClient):
             secondary_file_name: str,
             filename: str = "document.pdf"
     ) -> ApiResponse:
+        """
+        Upload PDF from a file buffer (like Streamlit UploadedFile)
+        """
+        # Prepare the multipart form data
         files = {
             'file': (filename, file_buffer, 'application/pdf')
         }
-        data = {
+
+        # Prepare form fields (NOT JSON)
+        form_data = {
             'secondary_file_name': secondary_file_name
         }
-        return self._make_request('POST', self.base_endpoint, data=data, files=files)
+
+        # Use the base client's _make_request with files parameter
+        return self._make_request('POST', self.base_endpoint, data=form_data, files=files)
 
     def get_all_documents(self) -> ApiResponse:
         return self.get(self.base_endpoint)

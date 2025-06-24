@@ -1,7 +1,5 @@
 import time
-
 import streamlit as st
-
 from utils import format_file_size
 
 
@@ -60,6 +58,16 @@ def upload_document_dialog(document_service):
             else:
                 with st.spinner("Uploading and processing document..."):
                     try:
+                        # CRITICAL: Reset file pointer to beginning
+                        uploaded_file.seek(0)
+
+                        # Debug info
+                        st.write(f"Debug: File name: {uploaded_file.name}")
+                        st.write(f"Debug: File type: {uploaded_file.type}")
+                        st.write(f"Debug: File size: {uploaded_file.size}")
+                        st.write(f"Debug: Document title: '{document_title.strip()}'")
+
+                        # Upload the file
                         response = document_service.upload_pdf_from_buffer(
                             file_buffer=uploaded_file,
                             secondary_file_name=document_title.strip(),
@@ -74,9 +82,14 @@ def upload_document_dialog(document_service):
                         else:
                             error_msg = response.error or "Unknown error occurred"
                             st.error(f"❌ Upload failed: {error_msg}")
+                            st.error(f"❌ Status code: {response.status_code}")
 
                     except Exception as e:
                         st.error(f"❌ Error during upload: {str(e)}")
+                        st.error(f"❌ Exception type: {type(e).__name__}")
+                        # Show more detailed error info
+                        import traceback
+                        st.code(traceback.format_exc())
 
 def update_document_title_dialog(document_service, document_id, current_title):
     """Dialog for updating document title"""
