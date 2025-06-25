@@ -219,7 +219,7 @@ def render_interview_card(interview):
                          help=f"Begin the {interview.get('difficulty', 'MEDIUM').lower()} difficulty interview"):
                 start_interview(interview_service, interview_id, interview_name)
 
-        st.markdown("---")
+        st.divider()
 
 
 def render_empty_state():

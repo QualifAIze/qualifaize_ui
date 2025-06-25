@@ -147,7 +147,7 @@ def assign_interview_dialog():
 
 
     # Dialog Action Buttons
-    st.markdown("---")
+    st.divider()
     col1, col2 = st.columns([1, 1])
 
     with col1:

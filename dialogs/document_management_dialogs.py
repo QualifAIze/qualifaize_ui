@@ -103,7 +103,7 @@ def update_document_title_dialog(document_service, document_id, current_title):
         help="The new title will be used to identify this document"
     )
 
-    st.markdown("---")
+    st.divider()
     col1, col2 = st.columns([1, 1])
 
     with col1:

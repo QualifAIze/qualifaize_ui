@@ -352,20 +352,9 @@ with st.spinner("Loading interview history..."):
                         candidate_review = interview.get('candidateReview')
 
                         if candidate_review and candidate_review.strip():
-                            st.markdown(f"""
-                            <div class="feedback-section">
-                                <h4 style="margin-top: 0; color: #059669;">
-                                    ✅ Feedback Available
-                                </h4>
-                                <div style="background: rgba(255, 255, 255, 0.8); 
-                                           border-radius: 6px; 
-                                           padding: 16px; 
-                                           margin-top: 12px;
-                                           border-left: 3px solid #10b981;">
-                                    {candidate_review}
-                                </div>
-                            </div>
-                            """, unsafe_allow_html=True)
+                            with st.expander("📝 Your review is ready! (click to see it)", expanded=False):
+                                with st.container(border=True):
+                                    st.markdown(candidate_review)
                         else:
                             st.markdown(f"""
                             <div class="feedback-section feedback-pending">
