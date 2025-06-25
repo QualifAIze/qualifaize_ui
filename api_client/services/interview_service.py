@@ -35,6 +35,13 @@ class InterviewService(BaseApiClient):
         params = {"newStatus": new_status}
         return self.get(f"{self.base_endpoint}/{interview_id}", params=params)
 
+    def get_interviews_with_questions(self, interview_id: Optional[str] = None) -> ApiResponse:
+        if interview_id:
+            params = {"interviewId": interview_id}
+            return self.get(f"{self.base_endpoint}/with-questions", params=params)
+        else:
+            return self.get(f"{self.base_endpoint}/with-questions")
+
     def get_next_question(self, interview_id: str) -> ApiResponse:
         return self.get(f"{self.base_endpoint}/next/{interview_id}")
 

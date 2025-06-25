@@ -204,7 +204,6 @@ dashboard_styles = """<style>
 </style>
 """
 
-
 auth_styles = """
 <style>
 .login-title {
@@ -219,7 +218,6 @@ auth_styles = """
 }
 </style>
 """
-
 
 account_details_styles = """
 <style>
@@ -285,7 +283,6 @@ account_details_styles = """
 }
 </style>
 """
-
 
 user_management_styles = """
 <style>
@@ -365,7 +362,6 @@ user_management_styles = """
 }
 </style>
 """
-
 
 document_management_styles = """
 <style>
@@ -452,7 +448,6 @@ document_management_styles = """
 }
 </style>
 """
-
 
 interview_page_styles = """
     <style>
@@ -609,3 +604,113 @@ interview_page_styles = """
     }
     </style>
     """
+
+history_page_styles = """
+<style>
+.interview-summary {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 69, 19, 0.05) 100%);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 8px 0;
+    border-left: 4px solid #3b82f6;
+}
+
+[data-theme="dark"] .interview-summary {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 69, 19, 0.1) 100%);
+    border-left-color: #60a5fa;
+}
+
+.status-completed {
+    background: #dcfce7;
+    color: #166534;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-scheduled {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-in-progress {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.question-item {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 8px 0;
+    border-left: 3px solid;
+}
+
+[data-theme="dark"] .question-item {
+    background: rgba(55, 65, 81, 0.95);
+}
+
+.question-correct {
+    border-left-color: #10b981;
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.question-incorrect {
+    border-left-color: #ef4444;
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.question-unanswered {
+    border-left-color: #6b7280;
+    background: rgba(107, 114, 128, 0.05);
+}
+
+.metric-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    border: 1px solid rgba(203, 213, 225, 0.5);
+}
+
+[data-theme="dark"] .metric-card {
+    background: rgba(55, 65, 81, 0.8);
+    border-color: rgba(71, 85, 105, 0.5);
+}
+
+.feedback-section {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 16px 0;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+[data-theme="dark"] .feedback-section {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%);
+}
+
+.feedback-pending {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+    border-color: rgba(251, 191, 36, 0.3);
+}
+</style>
+"""
