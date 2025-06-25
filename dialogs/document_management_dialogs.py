@@ -111,13 +111,10 @@ def update_document_title_dialog(document_service, document_id, current_title):
             st.rerun()
 
     with col2:
-        update_disabled = not new_title or not new_title.strip() or new_title.strip() == current_title
-
         if st.button(
                 "💾 Update Title",
                 type="primary",
-                use_container_width=True,
-                disabled=update_disabled
+                use_container_width=True
         ):
             if not new_title or not new_title.strip():
                 st.error("❌ Please enter a valid title")
