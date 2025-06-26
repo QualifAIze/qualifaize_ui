@@ -91,13 +91,6 @@ def submit_answer(interview_service, question_id, selected_answer):
 def complete_interview(interview_service):
     """Complete the interview and return to normal view"""
     interview_state = get_interview_state()
-    interview_id = interview_state["interview_id"]
-
-    # Change interview status to COMPLETED
-    try:
-        response = interview_service.change_interview_status(interview_id, "COMPLETED")
-    except Exception as e:
-        st.warning(f"Could not update interview status: {str(e)}")
 
     # Calculate final statistics
     question_history = interview_state["question_history"]
