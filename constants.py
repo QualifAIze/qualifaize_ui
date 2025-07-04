@@ -2,7 +2,7 @@ import base64
 
 BACKEND_BASE_URL = "http://localhost:8080"
 BACKEND_BASE_PATH = "api/v1"
-DEFAULT_TIMEOUT = 30
+DEFAULT_TIMEOUT = 120
 DEFAULT_CONTENT_TYPE = "application/json"
 BEARER_PREFIX = "Bearer"
 HTTP_SUCCESS_MIN = 200

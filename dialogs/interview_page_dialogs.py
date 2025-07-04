@@ -42,7 +42,6 @@ def assign_interview_dialog():
         difficulty_level = st.segmented_control(
             "Difficulty Level *",
             options=constants.DIFFICULTY,
-            default="MEDIUM",
             help="Select the overall difficulty level for the interview"
         )
 
